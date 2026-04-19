@@ -8,8 +8,11 @@ import com.koins.loanwallet.service.WalletService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
+
+@Tag(name = "Wallet", description = "Wallet balance, wallet funding, and wallet transaction APIs")
 
 @RestController
 @RequestMapping("/api/v1/wallet")
@@ -18,6 +21,7 @@ public class WalletController {
 
     private final WalletService walletService;
 
+    @Operation(summary = "Get current user's wallet")
     @GetMapping
     public ApiResponse<WalletResponse> getMyWallet() {
         return ApiResponse.<WalletResponse>builder()
@@ -27,6 +31,7 @@ public class WalletController {
                 .build();
     }
 
+    @Operation(summary = "Initiate wallet funding")
     @PostMapping("/fund")
     public ApiResponse<TransactionResponse> fundWallet(@Valid @RequestBody FundWalletRequest request) {
         return ApiResponse.<TransactionResponse>builder()
@@ -36,6 +41,7 @@ public class WalletController {
                 .build();
     }
 
+    @Operation(summary = "Get current user's wallet transactions")
     @GetMapping("/transactions")
     public ApiResponse<List<TransactionResponse>> getMyTransactions() {
         return ApiResponse.<List<TransactionResponse>>builder()

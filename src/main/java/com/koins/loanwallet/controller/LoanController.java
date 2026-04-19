@@ -8,9 +8,12 @@ import com.koins.loanwallet.service.LoanService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.UUID;
+
+@Tag(name = "Loans", description = "Loan application, approval, disbursement, repayment, and retrieval APIs")
 
 @RestController
 @RequestMapping("/api/v1/loans")
@@ -19,6 +22,7 @@ public class LoanController {
 
     private final LoanService loanService;
 
+    @Operation(summary = "Apply for a loan")
     @PostMapping
     public ApiResponse<LoanResponse> applyForLoan(@Valid @RequestBody ApplyLoanRequest request) {
         return ApiResponse.<LoanResponse>builder()
@@ -28,6 +32,7 @@ public class LoanController {
                 .build();
     }
 
+    @Operation(summary = "Approve a loan")
     @PostMapping("/{loanId}/approve")
     public ApiResponse<LoanResponse> approveLoan(@PathVariable UUID loanId) {
         return ApiResponse.<LoanResponse>builder()
@@ -37,6 +42,7 @@ public class LoanController {
                 .build();
     }
 
+    @Operation(summary = "Disburse an approved loan")
     @PostMapping("/{loanId}/disburse")
     public ApiResponse<LoanResponse> disburseLoan(@PathVariable UUID loanId) {
         return ApiResponse.<LoanResponse>builder()
@@ -46,6 +52,7 @@ public class LoanController {
                 .build();
     }
 
+    @Operation(summary = "Repay a loan")
     @PostMapping("/{loanId}/repay")
     public ApiResponse<LoanResponse> repayLoan(@PathVariable UUID loanId,
                                                @Valid @RequestBody RepayLoanRequest request) {
@@ -56,6 +63,7 @@ public class LoanController {
                 .build();
     }
 
+    @Operation(summary = "Get a single loan by ID")
     @GetMapping("/{loanId}")
     public ApiResponse<LoanResponse> getLoanById(@PathVariable UUID loanId) {
         return ApiResponse.<LoanResponse>builder()
@@ -65,6 +73,7 @@ public class LoanController {
                 .build();
     }
 
+    @Operation(summary = "Get all loans for current user")
     @GetMapping
     public ApiResponse<List<LoanResponse>> getMyLoans() {
         return ApiResponse.<List<LoanResponse>>builder()

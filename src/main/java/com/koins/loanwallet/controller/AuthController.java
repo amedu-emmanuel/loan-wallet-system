@@ -10,6 +10,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Authentication", description = "Authentication and password recovery APIs")
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -18,6 +22,7 @@ public class AuthController {
 
     private final AuthService authService;
 
+    @Operation(summary = "Register a new user")
     @PostMapping("/signup")
     public ApiResponse<UserResponse> signup(@Valid @RequestBody SignupRequest request) {
         return ApiResponse.<UserResponse>builder()
@@ -27,6 +32,7 @@ public class AuthController {
                 .build();
     }
 
+    @Operation(summary = "Login user and return JWT token")
     @PostMapping("/login")
     public ApiResponse<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         return ApiResponse.<AuthResponse>builder()
@@ -36,6 +42,7 @@ public class AuthController {
                 .build();
     }
 
+    @Operation(summary = "Logout user by blacklisting current token")
     @PostMapping("/logout")
     public ApiResponse<Void> logout(HttpServletRequest request) {
         authService.logout(request);
@@ -46,6 +53,7 @@ public class AuthController {
                 .build();
     }
 
+    @Operation(summary = "Generate OTP for password reset")
     @PostMapping("/forgot-password")
     public ApiResponse<OtpResponse> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
         return ApiResponse.<OtpResponse>builder()
@@ -55,6 +63,7 @@ public class AuthController {
                 .build();
     }
 
+    @Operation(summary = "Resend password reset OTP")
     @PostMapping("/resend-otp")
     public ApiResponse<OtpResponse> resendOtp(@Valid @RequestBody ResendOtpRequest request) {
         return ApiResponse.<OtpResponse>builder()
@@ -64,6 +73,7 @@ public class AuthController {
                 .build();
     }
 
+    @Operation(summary = "Reset password using OTP")
     @PostMapping("/reset-password")
     public ApiResponse<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
         authService.resetPassword(request);

@@ -43,7 +43,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     @Transactional
-    public WalletResponse fundWallet(FundWalletRequest request) {
+    public TransactionResponse fundWallet(FundWalletRequest request) {
         UUID userId = SecurityUtils.getCurrentUserId();
 
         User user = userRepository.findById(userId)
@@ -52,22 +52,19 @@ public class WalletServiceImpl implements WalletService {
         Wallet wallet = walletRepository.findByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Wallet not found"));
 
-        wallet.setBalance(wallet.getBalance().add(request.getAmount()));
-        Wallet updatedWallet = walletRepository.save(wallet);
-
         Transaction transaction = Transaction.builder()
                 .user(user)
-                .wallet(updatedWallet)
+                .wallet(wallet)
                 .transactionType(TransactionType.WALLET_FUNDING)
                 .amount(request.getAmount())
-                .transactionStatus(TransactionStatus.SUCCESS)
+                .transactionStatus(TransactionStatus.PENDING)
                 .referenceNumber(ReferenceGenerator.generateReference("FUND"))
                 .timestamp(LocalDateTime.now())
                 .build();
 
-        transactionRepository.save(transaction);
+        Transaction savedTransaction = transactionRepository.save(transaction);
 
-        return mapToWalletResponse(updatedWallet);
+        return mapToTransactionResponse(savedTransaction);
     }
 
     @Override

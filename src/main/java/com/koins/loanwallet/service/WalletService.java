@@ -10,7 +10,7 @@ public interface WalletService {
 
     WalletResponse getMyWallet();
 
-    WalletResponse fundWallet(FundWalletRequest request);
+    TransactionResponse fundWallet(FundWalletRequest request);
 
     List<TransactionResponse> getMyTransactions();
 }

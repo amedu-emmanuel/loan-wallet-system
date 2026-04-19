@@ -28,10 +28,10 @@ public class WalletController {
     }
 
     @PostMapping("/fund")
-    public ApiResponse<WalletResponse> fundWallet(@Valid @RequestBody FundWalletRequest request) {
-        return ApiResponse.<WalletResponse>builder()
+    public ApiResponse<TransactionResponse> fundWallet(@Valid @RequestBody FundWalletRequest request) {
+        return ApiResponse.<TransactionResponse>builder()
                 .success(true)
-                .message("Wallet funded successfully")
+                .message("Wallet funding initiated successfully")
                 .data(walletService.fundWallet(request))
                 .build();
     }
